@@ -5,8 +5,10 @@
 **用摄像头和麦克风记录你三周，让 AI 把那些你自己都没意识到的判断，画给你看。**
 
 [![在线体验](https://img.shields.io/badge/在线体验-substrate--subconscious.app.workbuddy.host-39E7FF?style=for-the-badge)](https://substrate-subconscious.app.workbuddy.host/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4?style=for-the-badge)](CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-39E7FF?style=for-the-badge)](LICENSE)
 
-`概念 Demo` · `多模态 AI` · `2026`
+`概念 Demo` · `多模态 AI` · `文生视频` · `2026`
 
 </div>
 
@@ -124,3 +126,13 @@ AI 生成的画面与视频仅用于展示技术可行性，不构成任何心�
 ---
 
 如果这个方向有意思，欢迎提 issue 或 PR —— 尤其是**判读框架**部分，那是真正需要长期积累的地方。
+
+## 贡献方向
+
+这个仓库最缺的不是代码，是**判读依据**。如果你有以下任何一种，可以贡献：
+
+- **心理学背景** — 某个行为模式该对应什么人格维度？现有 4 条发现（印钞机/蝼蚁/吃饭机器/玻璃）是否站得住？
+- **多模态工程** — 视线估计、语音韵律、长期序列对齐，有没有更好的做法？
+- **隐私伦理** — 端侧处理、同意机制、随时可删，现在的方案够不够？
+- **落地场景** — 这个东西最该先用在谁身上：自己、恋人、团队、还是某个特定职业？
+
