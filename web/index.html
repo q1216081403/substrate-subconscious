@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="description" content="用摄像头和麦克风记录你三周，让 AI 把那些你自己都没意识到的判断，画给你看。">
+<meta property="og:title" content="你的潜意识长什么样">
+<meta property="og:description" content="用摄像头和麦克风记录你三周，让 AI 把那些你自己都没意识到的判断，画给你看。">
+<title>你的潜意识长什么样 · SUBSTRATE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  background:#04070F;color:#E8EEF8;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.c-cy{color:#39E7FF}.c-vi{color:#7B6BFF}.c-am{color:#FFC14D}.c-dim{color:#5A6480}
+
+/* 首屏 */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 28px calc(60px + env(safe-area-inset-bottom));
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(57,231,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,231,255,.04) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.hero>*{position:relative;z-index:1}
+.tag{
+  font-size:10px;letter-spacing:3.5px;color:#39E7FF;
+  border:1px solid rgba(57,231,255,.3);background:rgba(57,231,255,.06);
+  padding:6px 16px;border-radius:20px;margin-bottom:28px;
+}
+h1{font-size:38px;font-weight:800;line-height:1.28;letter-spacing:.5px}
+h1 em{font-style:normal;color:#39E7FF}
+.lead{
+  font-size:14.5px;color:#8A94AC;line-height:1.85;
+  margin:20px auto 0;max-width:340px;
+}
+.hero-img{
+  width:190px;height:190px;border-radius:50%;
+  object-fit:cover;margin:34px auto 0;
+  border:1px solid rgba(57,231,255,.25);
+  box-shadow:0 0 60px rgba(57,231,255,.22);
+  animation:breathe 3.4s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{transform:scale(.97);opacity:.88}50%{transform:scale(1.03);opacity:1}}
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-size:11px;color:#5A6480;letter-spacing:2px;
+  animation:updown 1.8s ease-in-out infinite;
+}
+@keyframes updown{0%,100%{transform:translate(-50%,0);opacity:.5}50%{transform:translate(-50%,7px);opacity:1}}
+
+/* 通用 */
+.sec{padding:70px 22px}
+.sec-l{
+  font-size:10.5px;letter-spacing:3.5px;color:#39E7FF;
+  opacity:.8;margin-bottom:14px;
+}
+.sec-t{font-size:27px;font-weight:800;line-height:1.32;margin-bottom:14px}
+.sec-d{font-size:14px;color:#8A94AC;line-height:1.85}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(57,231,255,.28),transparent);margin:0}
+
+/* 步骤 */
+.step{display:flex;gap:16px;margin-bottom:26px;align-items:flex-start}
+.step-i{
+  flex-shrink:0;width:38px;height:38px;border-radius:11px;
+  background:rgba(57,231,255,.1);border:1px solid rgba(57,231,255,.32);
+  color:#39E7FF;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-t{font-size:17px;font-weight:700;margin-bottom:7px}
+.step-d{font-size:13px;color:#7A85A0;line-height:1.75}
+
+/* 采集 */
+.cam-box{
+  position:relative;border-radius:20px;overflow:hidden;
+  border:1px solid rgba(57,231,255,.18);background:#080E1E;
+  aspect-ratio:3/4;margin:26px 0;
+}
+.cam-box video{width:100%;height:100%;object-fit:cover}
+.cam-ph{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:28px;text-align:center;
+  background:#080E1E;
+}
+.cam-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.24}
+.cam-ph>*{position:relative;z-index:1}
+.cam-ph h3{font-size:17px;font-weight:700;margin-bottom:10px}
+.cam-ph p{font-size:12.5px;color:#7A85A0;line-height:1.7;margin-bottom:22px}
+.btn-g{
+  height:44px;padding:0 30px;border-radius:22px;
+  border:1px solid rgba(57,231,255,.35);color:#39E7FF;
+  font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(57,231,255,.06);
+}
+.hud{
+  position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
+  background:linear-gradient(180deg,transparent,rgba(6,10,24,.95) 34%);
+}
+.hud-r{display:flex;gap:22px;margin-bottom:11px}
+.hud-v{font-size:15px;font-weight:700;color:#39E7FF}
+.hud-k{font-size:9.5px;color:#5A6480;margin-top:2px}
+.wave{display:flex;align-items:flex-end;gap:2.5px;height:30px;margin-bottom:10px}
+.wave i{flex:1;border-radius:1px;background:linear-gradient(180deg,#39E7FF,rgba(123,107,255,.3));transition:height .2s}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tg{
+  font-size:10px;color:#39E7FF;background:rgba(57,231,255,.1);
+  border:1px solid rgba(57,231,255,.22);padding:4px 9px;border-radius:5px;
+}
+.stats{
+  display:flex;background:rgba(18,26,48,.7);
+  border:1px solid rgba(57,231,255,.14);border-radius:16px;
+  padding:22px 0;margin-bottom:26px;
+}
+.stat{flex:1;text-align:center}
+.stat-n{font-size:23px;font-weight:700}
+.stat-k{font-size:10.5px;color:#5A6480;margin-top:4px}
+
+/* 维度 */
+.dim{margin-bottom:13px}
+.dim-r{display:flex;align-items:center;gap:10px}
+.dim-n{font-size:12.5px;color:#A8B2C8;width:58px;flex-shrink:0}
+.bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#39E7FF,#7B6BFF);width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.dim-v{font-size:12px;color:#39E7FF;width:28px;text-align:right}
+
+/* 发现 */
+.find{
+  background:rgba(18,26,48,.72);border:1px solid rgba(57,231,255,.14);
+  border-radius:18px;padding:20px;margin-bottom:16px;
+}
+.find-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px;gap:12px}
+.find-l{font-size:18px;font-weight:700}
+.find-s{font-size:25px;font-weight:800;flex-shrink:0}
+.meta{
+  background:linear-gradient(135deg,rgba(57,231,255,.08),rgba(123,107,255,.08));
+  border-left:2px solid #39E7FF;border-radius:8px;padding:14px;margin:13px 0;
+}
+.meta-t{font-size:9.5px;color:#39E7FF;letter-spacing:2.5px;margin-bottom:8px}
+.meta-n{font-size:21px;font-weight:800;margin-bottom:7px}
+.meta-d{font-size:12px;color:#8A94AC;line-height:1.7}
+.find-x{font-size:12.5px;color:#A8B2C8;line-height:1.8}
+.evid{
+  margin-top:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,.07);
+  display:none;
+}
+.evid.on{display:block;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.ev-t{font-size:9.5px;color:#5A6480;letter-spacing:2px;margin-bottom:12px}
+.ev-i{background:rgba(255,255,255,.03);border-radius:8px;padding:12px 13px;margin-bottom:9px}
+.ev-r{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px}
+.ev-s{font-size:12px;color:#C8D0E0}
+.ev-g{font-size:11.5px;color:#39E7FF;flex-shrink:0}
+.ev-f{font-size:10.5px;color:#6E7893}
+.fl{font-size:9.5px;padding:4px 9px;border-radius:5px;flex-shrink:0}
+.fl.bad{color:#FF7B6B;background:rgba(255,123,107,.12)}
+.fl.good{color:#5BE8A8;background:rgba(91,232,168,.12)}
+.ev-more{
+  text-align:center;font-size:12.5px;color:#39E7FF;
+  margin-top:14px;cursor:pointer;
+}
+
+/* 世界 */
+.sc{
+  background:rgba(18,26,48,.6);border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;overflow:hidden;margin-bottom:20px;
+}
+.sc.on{border-color:rgba(57,231,255,.32);box-shadow:0 0 40px rgba(57,231,255,.1)}
+.sc-img{position:relative;aspect-ratio:16/11;overflow:hidden;background:#080E1E}
+.sc-img img{width:100%;height:100%;object-fit:cover;opacity:.55;transition:opacity .5s}
+.sc.on .sc-img img{opacity:.92}
+.sc-no{
+  position:absolute;right:14px;top:12px;
+  font-size:24px;font-weight:800;color:rgba(232,238,248,.35);
+}
+.sc-b{padding:0 18px 20px;margin-top:-46px;position:relative}
+.sc-s{font-size:9.5px;letter-spacing:2.5px;color:#39E7FF;margin-bottom:8px}
+.sc-t{font-size:20px;font-weight:800;margin-bottom:7px}
+.sc-g{font-size:11px;color:#8A94AC;margin-bottom:11px}
+.sc-n{font-size:13px;color:#B0BACE;line-height:1.8}
+.shots{display:none;margin-top:16px;padding-top:15px;border-top:1px solid rgba(255,255,255,.07)}
+.shots.on{display:block;animation:fade .4s ease}
+.sh{display:flex;margin-bottom:10px}
+.sh-t{font-size:10px;color:#39E7FF;width:42px;flex-shrink:0;padding-top:2px}
+.sh-c{font-size:11.5px;color:#8A94AC;line-height:1.65;flex:1}
+.sh-p{margin-top:14px;background:rgba(0,0,0,.35);border-radius:8px;padding:12px}
+.sh-p-l{font-size:8.5px;color:#5A6480;letter-spacing:2px;margin-bottom:8px}
+.sh-p-t{font-size:10px;color:#7B6BFF;line-height:1.6;word-break:break-all}
+
+/* 视频 */
+.vid-box{border-radius:18px;overflow:hidden;border:1px solid rgba(57,231,255,.18);margin:26px 0;background:#080E1E}
+video{width:100%;display:block}
+
+/* 结论 */
+.verdict{
+  padding:26px;border-radius:18px;margin:26px 0;
+  background:linear-gradient(135deg,rgba(57,231,255,.1),rgba(123,107,255,.06));
+  border:1px solid rgba(57,231,255,.2);
+}
+.verdict-l{font-size:9.5px;color:#39E7FF;letter-spacing:3px;margin-bottom:13px}
+.verdict-t{font-size:20px;font-weight:700;line-height:1.7}
+
+/* CTA */
+.cta-wrap{text-align:center;padding:36px 22px calc(70px + env(safe-area-inset-bottom))}
+.btn{
+  height:54px;border-radius:27px;
+  background:linear-gradient(135deg,#39E7FF,#7B6BFF);
+  color:#04101F;font-size:17px;font-weight:800;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 44px rgba(57,231,255,.32);
+  border:0;width:100%;max-width:340px;margin:0 auto;
+}
+.note{font-size:11px;color:#4A5570;margin-top:20px;line-height:1.7}
+
+/* 海报 */
+.poster-wrap{display:none;margin-top:26px;text-align:center}
+.poster-wrap.on{display:block;animation:fade .5s ease}
+#poster{width:100%;max-width:300px;margin:0 auto;border-radius:12px;box-shadow:0 12px 50px rgba(0,0,0,.6)}
+.save-tip{font-size:12px;color:#39E7FF;margin-top:14px;line-height:1.7}
+
+/* 技术 */
+.tech{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:22px;margin-top:22px}
+.tech-i{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.tech-i:last-child{border:0;padding-bottom:0}
+.tech-k{font-size:9.5px;color:#39E7FF;letter-spacing:2.5px;margin-bottom:6px}
+.tech-t{font-size:14.5px;font-weight:700;margin-bottom:6px}
+.tech-d{font-size:12px;color:#8A94AC;line-height:1.75}
+.tech-v{font-size:10.5px;color:#7B6BFF;margin-top:7px;background:rgba(0,0,0,.3);padding:6px 9px;border-radius:5px;line-height:1.5}
+.tech-d b{color:#39E7FF}
+
+/* 引导层 */
+.mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:99;
+  display:none;align-items:flex-end;justify-content:center;padding:28px 24px;
+  text-align:center;backdrop-filter:blur(3px);
+}
+.mask.on{display:flex;animation:fade .3s ease}
+.arrow{
+  width:52px;height:52px;margin-left:auto;margin-bottom:18px;
+  animation:pt 1.4s ease-in-out infinite;
+}
+@keyframes pt{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-9px);opacity:1}}
+.mask h3{font-size:19px;font-weight:700;margin-bottom:11px}
+.mask p{font-size:13px;color:#8A94AC;line-height:1.8;margin-bottom:20px}
+.mask-x{
+  font-size:13px;color:#39E7FF;border:1px solid rgba(57,231,255,.3);
+  padding:9px 26px;border-radius:20px;display:inline-block;
+}
+</style>
+</head>
+<body>
+
+<!-- 首屏 -->
+<div class="hero">
+  <div class="tag mono">MULTIMODAL · CONCEPT DEMO</div>
+  <h1>你的潜意识<br><em>长什么样</em></h1>
+  <p class="lead">用摄像头和麦克风记录你三周，然后让 AI 把那些你自己都没意识到的判断，画给你看。</p>
+  <img class="hero-img" src="assets/avatar_wire.png" alt="潜意识线框图">
+  <div class="scroll-hint">↓ 向下滑动</div>
+</div>
+
+<!-- 01 观察 -->
+<div class="sec" style="padding-top:0">
+  <div class="step">
+    <div class="step-i mono">01</div>
+    <div>
+      <div class="step-t">观察你</div>
+      <div class="step-d">摄像头看视线与表情，麦克风听语气与停顿，全部在你的手机本地处理，不上传。</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-i mono">02</div>
+    <div>
+      <div class="step-t">读懂你</div>
+      <div class="step-d">多模态模型从上万条数据里，找出你反复出现的判断模式。</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-i mono">03</div>
+    <div>
+      <div class="step-t">生成你的世界</div>
+      <div class="step-d">把结论变成一段视频：AI 按你的潜意识，渲染你的世界长什么样。</div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- 02 采集 -->
+<div class="sec">
+  <div class="sec-l">STEP 01 · 采集</div>
+  <div class="sec-t">正在观察你</div>
+  <div class="sec-d">21 天 / 186 小时 / 4820 个有效样本</div>
+
+  <div class="cam-box">
+    <video id="cam" autoplay muted playsinline style="display:none"></video>
+    <div class="cam-ph" id="camPh">
+      <img src="assets/data_flow.png" alt="">
+      <h3>开启摄像头</h3>
+      <p>数据全部在本机处理，不上传原始画面与声音<br>拒绝授权也可继续观看演示</p>
+      <div class="btn-g" id="camBtn">开启摄像头</div>
+    </div>
+    <div class="hud" id="hud" style="display:none">
+      <div class="hud-r">
+        <div><div class="hud-v mono" id="mFps">30</div><div class="hud-k">FPS</div></div>
+        <div><div class="hud-v mono" id="mFace">1</div><div class="hud-k">人脸</div></div>
+        <div><div class="hud-v mono" id="mVoice">186</div><div class="hud-k">语气 Hz</div></div>
+      </div>
+      <div class="wave" id="wave"></div>
+      <div class="tags" id="liveTags"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n mono">21</div><div class="stat-k">观测天数</div></div>
+    <div class="stat"><div class="stat-n mono">186</div><div class="stat-k">累计小时</div></div>
+    <div class="stat"><div class="stat-n mono">4820</div><div class="stat-k">有效样本</div></div>
+  </div>
+
+  <div class="sec-l" style="margin-top:36px">采集维度</div>
+  <div class="step" style="margin-bottom:14px">
+    <div class="step-i mono" style="background:rgba(57,231,255,.1);border-color:rgba(57,231,255,.32);color:#39E7FF;font-size:11px">眼</div>
+    <div><div class="step-t" style="font-size:15px">视线轨迹</div><div class="step-d">记录你看向哪里、看多久、在什么时刻移开</div></div>
+  </div>
+  <div class="step" style="margin-bottom:14px">
+    <div class="step-i mono" style="background:rgba(123,107,255,.1);border-color:rgba(123,107,255,.32);color:#7B6BFF;font-size:11px">面</div>
+    <div><div class="step-t" style="font-size:15px">面部微表情</div><div class="step-d">捕捉被观察时的细微反应，不识别身份</div></div>
+  </div>
+  <div class="step" style="margin-bottom:14px">
+    <div class="step-i mono" style="background:rgba(255,193,77,.1);border-color:rgba(255,193,77,.32);color:#FFC14D;font-size:11px">声</div>
+    <div><div class="step-t" style="font-size:15px">语气与停顿</div><div class="step-d">语速、音高、沉默长度——情绪的声学特征</div></div>
+  </div>
+  <div class="step">
+    <div class="step-i mono" style="background:rgba(255,123,107,.1);border-color:rgba(255,123,107,.32);color:#FF7B6B;font-size:11px">节</div>
+    <div><div class="step-t" style="font-size:15px">交互节奏</div><div class="step-d">谁先开口、谁在主导、对话如何收束</div></div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- 03 画像 -->
+<div class="sec">
+  <div class="sec-l">STEP 02 · 画像</div>
+  <div class="sec-t">AI 看到了什么</div>
+  <div class="sec-d" style="margin-bottom:32px">基于 21 天 / 186 小时数据 · 置信度 0.87</div>
+
+  <div class="sec-l" style="margin-bottom:20px">人格维度图谱</div>
+  <div id="dims"></div>
+
+  <div class="sec-l" style="margin:40px 0 18px">核心发现</div>
+  <div id="finds"></div>
+
+  <div class="verdict">
+    <div class="verdict-l">一句话总结</div>
+    <div class="verdict-t">你不是不敏感，你只是把<span class="c-cy">敏感</span>用在了<span class="c-am">判断</span>上，而不是<span class="c-vi">感受</span>上。</div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- 04 世界 -->
+<div class="sec">
+  <div class="sec-l">STEP 03 · 具象化</div>
+  <div class="sec-t">你的潜意识世界</div>
+  <div class="sec-d" style="margin-bottom:30px">AI 依据你的画像生成的影像——它不是记录，是还原</div>
+
+  <div class="vid-box">
+    <video src="assets/scene.mp4" autoplay muted loop playsinline poster="assets/world_atm.png"></video>
+  </div>
+
+  <div id="scenes"></div>
+</div>
+
+<!-- CTA + 海报 -->
+<div class="cta-wrap">
+  <div class="sec-l" style="margin-bottom:18px">生成你自己的报告</div>
+  <button class="btn" id="posterBtn">生成我的潜意识海报</button>
+
+  <div class="poster-wrap" id="posterWrap">
+    <img id="poster" alt="潜意识报告海报">
+    <div class="save-tip">长按图片保存到相册<br>再从相册发布到朋友圈</div>
+  </div>
+
+  <div class="note">概念 Demo · 所有人物数据均为模拟样本<br>画面与视频全部由 AI 生成，无实拍</div>
+
+  <div class="tech">
+    <div class="sec-l" style="margin-bottom:8px">技术实现 · 全链路均为当前已成熟技术</div>
+    <div class="tech-i">
+      <div class="tech-k mono">LAYER 01</div>
+      <div class="tech-t">采集层</div>
+      <div class="tech-d">端侧视觉模型（人脸框、微表情）与声学模型（语速、音高、停顿）在本机运行，原始画面与声音不出设备。</div>
+      <div class="tech-v mono">现成：MediaPipe / Whisper / 端侧 SDK</div>
+    </div>
+    <div class="tech-i">
+      <div class="tech-k mono">LAYER 02</div>
+      <div class="tech-t">推理层</div>
+      <div class="tech-d">多模态大模型对齐 21 天行为序列，从「谁被注视多久」这类原始信号，推导到「功利性视角 82」这类人格结论。</div>
+      <div class="tech-v mono">现成：多模态 LLM 长序列推理</div>
+    </div>
+    <div class="tech-i">
+      <div class="tech-k mono">LAYER 03</div>
+      <div class="tech-t">生成层</div>
+      <div class="tech-d">文生视频模型按分镜脚本渲染。本页所有画面均由 AI 生成，无实拍、无素材库。</div>
+      <div class="tech-v mono">现成：文生视频模型</div>
+    </div>
+    <div class="tech-i">
+      <div class="tech-k mono">MOAT</div>
+      <div class="tech-t">真正的门槛在哪</div>
+      <div class="tech-d">技术不是门槛——采集、推理、生成三环都已成熟。门槛是<b>心理学判读框架</b>：如何把行为序列翻译成人格，且说出来让人信。</div>
+      <div class="tech-v mono">这是需要长期积累的部分</div>
+    </div>
+  </div>
+</div>
+
+<!-- 分享引导 -->
+<div class="mask" id="mask">
+  <div style="width:100%">
+    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="#39E7FF" stroke-width="1.6">
+      <path d="M7 17L17 7M17 7H9M17 7v8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h3>分享到朋友圈</h3>
+    <p>点击右上角「···」<br>选择「分享到朋友圈」</p>
+    <div class="mask-x" id="maskX">知道了</div>
+  </div>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const DIMS=[
+ {name:'功利性',value:82},{name:'共情度',value:41},{name:'控制感',value:76},
+ {name:'攻击性',value:58},{name:'好奇心',value:33},{name:'钝感力',value:64}
+];
+
+const FINDS=[
+ {id:'utility',label:'功利性视角',score:82,level:'high',
+  summary:'在 21 天观测中，视线停留与对话起点的触发条件高度集中于「对方能提供什么」，而非「对方是谁」。',
+  metaphor:'印钞机',
+  metaphorDesc:'社交场合中，人被无意识抽象为「功能接口」——情绪是噪音，资源是信号。',
+  evidence:[
+    {scene:'同事 A 汇报工作',gaze:'1.2s',focus:'对方手中的报表',diverted:true},
+    {scene:'朋友 B 倾诉烦恼',gaze:'0.4s',focus:'手机屏幕',diverted:true},
+    {scene:'家人谈健康',gaze:'6.8s',focus:'对方面部',diverted:false}
+  ]},
+ {id:'hierarchy',label:'尺度错位',score:68,level:'mid',
+  summary:'面对权威时姿态高度收缩，面对更弱者时姿态扩张，两者之间的自我坐标并不稳定。',
+  metaphor:'蝼蚁',
+  metaphorDesc:'世界被感知为一张巨大的电路板，而自己与他人都是板上的微小节点。',
+  evidence:[
+    {scene:'上级指出问题',gaze:'0.2s',focus:'地面',diverted:true},
+    {scene:'对晚辈说话',gaze:'4.1s',focus:'对方面部',diverted:false},
+    {scene:'独处时',gaze:'—',focus:'自身',diverted:false}
+  ]},
+ {id:'consumption',label:'消耗式节奏',score:74,level:'high',
+  summary:'进食、通勤、等待等场景下存在明显的重复性行为闭环，缺少无目的的停留。',
+  metaphor:'吃饭机器',
+  metaphorDesc:'一天被切成若干「功能格」，每个格子都要被填满，而不是被体验。',
+  evidence:[
+    {scene:'工作日午餐',gaze:'12min',focus:'食物/手机',diverted:true},
+    {scene:'通勤地铁',gaze:'34min',focus:'手机',diverted:true},
+    {scene:'周末',gaze:'—',focus:'任务清单',diverted:true}
+  ]},
+ {id:'warmth',label:'低温共情',score:41,level:'low',
+  summary:'对情绪的识别准确但响应延迟——情绪被「读懂」之后并未转化为行动。',
+  metaphor:'隔着一层玻璃',
+  metaphorDesc:'能看见温度，却感受不到温度——感知与反应之间有一段被数据化的距离。',
+  evidence:[
+    {scene:'他人情绪峰值',gaze:'识别准确',focus:'—',diverted:false},
+    {scene:'可介入窗口',gaze:'0 次',focus:'—',diverted:true}
+  ]}
+];
+
+const SCENES=[
+ {id:'atm',no:'01',title:'把他看成印钞机',sub:'SCENE 01 · 功能性社交',img:'assets/world_atm.png',
+  target:'核心发现 · 功利性视角 82',
+  narr:'在这个场景里，其他人不是人，是接口。他们身上唯一被读取的部分，是「能给出什么」。',
+  prompt:'A person at a desk surrounded by human figures rendered as wireframe machines with coins flowing into them',
+  shots:[
+    {t:'0.0s',c:'固定广角：主体坐在中央，四周围绕着逐渐成形的线框人形。'},
+    {t:'2.1s',c:'推近：最近的人形开始齿轮化，硬币状光点向其汇入。'},
+    {t:'4.3s',c:'环绕：所有人形同步机械化，唯主体保持人形且背对镜头。'}]},
+ {id:'ant',no:'02',title:'把世界看成电路板',sub:'SCENE 02 · 尺度错位',img:'assets/world_ant.png',
+  target:'核心发现 · 尺度错位 68',
+  narr:'视点被拉到极高处。所有人都变成板上的微小节点，包括自己。',
+  prompt:'Tiny human silhouettes on a vast glowing circuit board landscape, extreme scale',
+  shots:[
+    {t:'0.0s',c:'俯拍上升：地面显现为发光电路板纹理。'},
+    {t:'2.0s',c:'急速拉远，人形缩至像素级，节点开始闪烁。'},
+    {t:'4.2s',c:'定格：从上方看，所有节点亮度一致——包括自己。'}]},
+ {id:'particle',no:'03',title:'把自己看成消耗单元',sub:'SCENE 03 · 消耗式节奏',img:'assets/world_particle.png',
+  target:'核心发现 · 消耗式节奏 74',
+  narr:'身体由数据粒子构成，粒子不断从身上剥离、上升、被系统吞掉，然后回来继续。',
+  prompt:'A silhouette made of glowing particles dissolving and streaming upward into machine monolith',
+  shots:[
+    {t:'0.0s',c:'中景：人形静立，粒子开始从轮廓剥离。'},
+    {t:'2.2s',c:'粒子流上升，汇入画面上方的一块巨型方体。'},
+    {t:'4.0s',c:'粒子回流补回人形，闭环完成，循环暗示。'}]}
+];
+
+const LV={high:'#FF7B6B',mid:'#FFC14D',low:'#39E7FF'};
+
+/* 中文按字换行 */
+function wrapText(ctx,txt,x0,y0,maxW,lh){
+  let line='',yy=y0;
+  for(const ch of txt){
+    if(ctx.measureText(line+ch).width>maxW){ctx.fillText(line,x0,yy);line=ch;yy+=lh}
+    else line+=ch;
+  }
+  if(line)ctx.fillText(line,x0,yy);
+  return yy;
+}
+
+/* ============ 渲染 ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+
+// 维度
+$('#dims').innerHTML=DIMS.map(d=>`
+ <div class="dim"><div class="dim-r">
+  <span class="dim-n">${d.name}</span>
+  <span class="bar"><i data-w="${d.value}"></i></span>
+  <span class="dim-v mono">${d.value}</span>
+ </div></div>`).join('');
+
+// 发现
+$('#finds').innerHTML=FINDS.map((f,i)=>`
+ <div class="find" data-i="${i}">
+  <div class="find-h">
+   <div class="find-l">${f.label}</div>
+   <div class="find-s mono" style="color:${LV[f.level]}">${f.score}</div>
+  </div>
+  <div class="bar" style="margin-bottom:2px"><i data-w="${f.score}" style="background:${LV[f.level]}"></i></div>
+  <div class="meta">
+   <div class="meta-t">潜意识隐喻</div>
+   <div class="meta-n">「${f.metaphor}」</div>
+   <div class="meta-d">${f.metaphorDesc}</div>
+  </div>
+  <div class="find-x">${f.summary}</div>
+  <div class="evid" id="ev${i}">
+   <div class="ev-t">证据链 · 原始观测</div>
+   ${f.evidence.map(e=>`
+    <div class="ev-i">
+     <div class="ev-r"><span class="ev-s">${esc(e.scene)}</span><span class="ev-g mono">${e.gaze}</span></div>
+     <div class="ev-r"><span class="ev-f">焦点：${esc(e.focus)}</span>
+      <span class="fl ${e.diverted?'bad':'good'}">${e.diverted?'已偏离':'真实接触'}</span></div>
+    </div>`).join('')}
+  </div>
+  <div class="ev-more" data-t="${i}">展开证据链 ▾</div>
+ </div>`).join('');
+
+$('#finds').addEventListener('click',e=>{
+  const t=e.target.closest('.ev-more'); if(!t)return;
+  const i=t.dataset.t, ev=$('#ev'+i), on=ev.classList.toggle('on');
+  t.textContent=on?'收起证据链 ▴':'展开证据链 ▾';
+});
+
+// 场景
+$('#scenes').innerHTML=SCENES.map((s,i)=>`
+ <div class="sc ${i===0?'on':''}" data-i="${i}">
+  <div class="sc-img"><img src="${s.img}" alt="${esc(s.title)}" loading="lazy"><div class="sc-no mono">${s.no}</div></div>
+  <div class="sc-b">
+   <div class="sc-s mono">${s.sub}</div>
+   <div class="sc-t">${s.title}</div>
+   <div class="sc-g">↳ ${s.target}</div>
+   <div class="sc-n">${s.narr}</div>
+   <div class="shots ${i===0?'on':''}" id="sh${i}">
+    ${s.shots.map(x=>`<div class="sh"><span class="sh-t mono">${x.t}</span><span class="sh-c">${esc(x.c)}</span></div>`).join('')}
+    <div class="sh-p"><div class="sh-p-l">生成提示词 · PROMPT</div><div class="sh-p-t mono">${esc(s.prompt)}</div></div>
+   </div>
+  </div>
+ </div>`).join('');
+
+$('#scenes').addEventListener('click',e=>{
+  const c=e.target.closest('.sc'); if(!c)return;
+  const i=c.dataset.i;
+  document.querySelectorAll('.sc').forEach(x=>{
+    const on=x.dataset.i===i;
+    x.classList.toggle('on',on);
+    $('#sh'+x.dataset.i).classList.toggle('on',on);
+  });
+});
+
+/* ============ 进度条动画 ============ */
+const bars=document.querySelectorAll('.bar i');
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+'%';io.unobserve(e.target)}})
+},{threshold:.4});
+bars.forEach(b=>io.observe(b));
+
+/* ============ 波形 ============ */
+const wave=$('#wave');
+for(let i=0;i<26;i++)wave.appendChild(document.createElement('i'));
+
+/* ============ 摄像头 ============ */
+const TAG_POOL=['视线停留 · 3.2s','语气上升','微表情 · 抑制','停顿 · 1.8s','主导权转移','回避接触','语速加快','情绪峰值'];
+let timer=null;
+
+function startSim(){
+  $('#hud').style.display='block';
+  $('#camPh').style.display='none';
+  if(timer)clearInterval(timer);
+  timer=setInterval(()=>{
+    wave.querySelectorAll('i').forEach(el=>{el.style.height=(15+Math.random()*85)+'%'});
+    $('#mFps').textContent=28+Math.floor(Math.random()*5);
+    $('#mFace').textContent=Math.random()>.35?1:(Math.random()>.6?2:0);
+    $('#mVoice').textContent=110+Math.floor(Math.random()*90);
+    const n=1+Math.floor(Math.random()*3),tags=[];
+    for(let i=0;i<n;i++){const t=TAG_POOL[Math.floor(Math.random()*TAG_POOL.length)];if(tags.indexOf(t)<0)tags.push(t)}
+    $('#liveTags').innerHTML=tags.map(t=>`<span class="tg">${t}</span>`).join('');
+  },220);
+}
+
+$('#camBtn').addEventListener('click',async function(){
+  this.textContent='请求权限中…';
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('unsupported');
+    const stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'user',width:{ideal:720}},audio:true
+    });
+    const v=$('#cam'); v.srcObject=stream; v.style.display='block';
+    $('#camPh').style.display='none';
+    $('#hud').style.display='block';
+    startSim();
+  }catch(e){
+    this.textContent='开启摄像头';
+    startSim(); // 拒绝授权 → 演示模式，链路不断
+  }
+});
+
+/* ============ 海报生成 ============ */
+$('#posterBtn').addEventListener('click',function(){
+  const W=750,H=1334;
+  const c=document.createElement('canvas');c.width=W;c.height=H;
+  const x=c.getContext('2d');
+
+  // 底
+  const g=x.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#060A18');g.addColorStop(1,'#0A1024');
+  x.fillStyle=g;x.fillRect(0,0,W,H);
+  // 网格
+  x.strokeStyle='rgba(57,231,255,.05)';x.lineWidth=1;
+  for(let i=0;i<W;i+=40){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}
+  for(let i=0;i<H;i+=40){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke()}
+  // 顶部光晕
+  const rg=x.createRadialGradient(W/2,190,0,W/2,190,340);
+  rg.addColorStop(0,'rgba(57,231,255,.3)');rg.addColorStop(1,'rgba(57,231,255,0)');
+  x.fillStyle=rg;x.fillRect(0,0,W,620);
+
+  const CY='#39E7FF',VI='#7B6BFF',DIM='#5A6480',TX='#E8EEF8';
+
+  // 头部
+  x.fillStyle=CY;x.font='500 20px sans-serif';
+  x.fillText('S U B S T R A T E',40,72);
+  x.fillStyle='rgba(232,238,248,.55)';x.font='300 21px sans-serif';
+  x.fillText('潜意识图谱 · 概念 Demo',40,104);
+
+  // 主隐喻
+  const f=FINDS[0];
+  x.fillStyle='rgba(57,231,255,.75)';x.font='400 22px sans-serif';
+  x.fillText('AI 眼中的核心发现',40,206);
+  x.fillStyle=TX;x.font='800 66px sans-serif';
+  x.fillText(f.label,40,272);
+  // 分数
+  x.fillStyle=LV.high;x.font='800 150px sans-serif';
+  x.fillText(String(f.score),40,428);
+  x.fillStyle=DIM;x.font='400 30px sans-serif';
+  x.fillText('/100',215,428);
+
+  // 隐喻框
+  x.fillStyle='rgba(57,231,255,.09)';
+  x.strokeStyle='rgba(57,231,255,.35)';x.lineWidth=2;
+  x.beginPath();x.roundRect(40,478,W-80,196,16);x.fill();x.stroke();
+  x.fillStyle=CY;x.font='400 19px sans-serif';
+  x.fillText('潜 意 识 隐 喻',66,514);
+  x.fillStyle=TX;x.font='800 76px sans-serif';
+  x.fillText('「'+f.metaphor+'」',66,594);
+  x.fillStyle='rgba(232,238,248,.72)';x.font='400 22px sans-serif';
+  wrapText(x,f.metaphorDesc,66,638,W-132,32);
+
+  // 维度条
+  x.fillStyle='rgba(57,231,255,.75)';x.font='400 19px sans-serif';
+  x.fillText('人 格 维 度',40,738);
+  DIMS.slice(0,4).forEach((d,i)=>{
+    const y=782+i*62;
+    x.fillStyle='rgba(232,238,248,.8)';x.font='400 22px sans-serif';
+    x.fillText(d.name,40,y);
+    // track
+    x.fillStyle='rgba(255,255,255,.09)';
+    x.beginPath();x.roundRect(160,y-15,W-280,12,6);x.fill();
+    // fill
+    const bw=(W-280)*d.value/100;
+    const lg=x.createLinearGradient(160,0,160+bw,0);
+    lg.addColorStop(0,CY);lg.addColorStop(1,VI);
+    x.fillStyle=lg;
+    x.beginPath();x.roundRect(160,y-15,Math.max(bw,12),12,6);x.fill();
+    x.fillStyle=CY;x.font='400 21px sans-serif';
+    x.fillText(String(d.value),W-96,y);
+  });
+
+  // 分割
+  const sy=1044;
+  x.strokeStyle='rgba(57,231,255,.25)';x.lineWidth=1;
+  x.beginPath();x.moveTo(40,sy);x.lineTo(W-40,sy);x.stroke();
+
+  // 结论
+  x.fillStyle=CY;x.font='400 19px sans-serif';
+  x.fillText('一 句 话 总 结',40,sy+46);
+  x.fillStyle=TX;x.font='700 30px sans-serif';
+  wrapText(x,'你不是不敏感，你只是把敏感用在了判断上，而不是感受上。',40,sy+92,W-80,46);
+
+  // 底部
+  x.fillStyle='rgba(232,238,248,.5)';x.font='400 20px sans-serif';
+  x.fillText('21 天 · 186 小时 · 4820 样本 · 置信度 0.87',40,H-96);
+  x.fillStyle='rgba(232,238,248,.32)';x.font='400 18px sans-serif';
+  x.fillText('概念 Demo · 画面与数据均为模拟样本',40,H-62);
+
+  $('#poster').src=c.toDataURL('image/png');
+  $('#posterWrap').classList.add('on');
+  this.textContent='海报已生成 · 长按保存';
+  $('#posterWrap').scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>{$('#mask').classList.add('on')},700);
+});
+
+/* ============ 分享引导 ============ */
+$('#maskX').addEventListener('click',()=>$('#mask').classList.remove('on'));
+</script>
+</body>
+</html>

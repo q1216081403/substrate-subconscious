@@ -1,0 +1,15 @@
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# 本地原图备份（AI 生成原图，各 2MB+，已压缩版进 web/assets）
+_local-assets-backup/
+
+# 小程序开发者工具
+project.private.config.json
+
+# 依赖与构建
+node_modules/
+dist/

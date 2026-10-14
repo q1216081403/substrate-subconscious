@@ -1,0 +1,230 @@
+.page {
+  min-height: 100vh;
+  padding: 40rpx 32rpx 60rpx;
+  box-sizing: border-box;
+}
+
+/* ---------- 头部 ---------- */
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.head-left { flex: 1; }
+
+.page-title { margin-top: 12rpx; }
+
+.rec-badge {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 123, 107, 0.12);
+  border: 1rpx solid rgba(255, 123, 107, 0.35);
+  color: #FF7B6B;
+  font-size: 22rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 26rpx;
+}
+
+.rec-badge.idle {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #5A6480;
+}
+
+.rec-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #FF7B6B;
+  margin-right: 10rpx;
+  animation: breathe 1.2s ease-in-out infinite;
+}
+
+/* ---------- 摄像头 ---------- */
+.cam-wrap {
+  position: relative;
+  width: 100%;
+  height: 620rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: #080E1E;
+  border: 1rpx solid rgba(57, 231, 255, 0.16);
+  margin-bottom: 32rpx;
+}
+
+.cam {
+  width: 100%;
+  height: 100%;
+}
+
+.cam-fake { width: 100%; height: 100%; position: relative; }
+
+.cam-fake-img {
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+.cam-fake-mask {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 56rpx;
+}
+
+.fake-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.fake-desc {
+  font-size: 23rpx;
+  color: #7A85A0;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 36rpx;
+}
+
+.fake-btn {
+  width: 300rpx;
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 24rpx;
+  background: linear-gradient(180deg, transparent, rgba(6, 10, 24, 0.92) 32%);
+}
+
+.hud-row { display: flex; margin-bottom: 20rpx; }
+
+.hud-item { flex: 1; }
+
+.hud-val {
+  font-size: 32rpx;
+  color: #39E7FF;
+  font-weight: 700;
+}
+
+.hud-key {
+  font-size: 19rpx;
+  color: #5A6480;
+  margin-top: 4rpx;
+  letter-spacing: 1rpx;
+}
+
+/* 波形 */
+.wave {
+  height: 60rpx;
+  display: flex;
+  align-items: flex-end;
+  gap: 6rpx;
+  margin-bottom: 20rpx;
+}
+
+.wave-bar {
+  flex: 1;
+  background: linear-gradient(180deg, #39E7FF, rgba(123, 107, 255, 0.35));
+  border-radius: 4rpx;
+  transition: height 0.18s ease;
+}
+
+.hud-tags { display: flex; flex-wrap: wrap; gap: 12rpx; }
+
+.hud-tag {
+  font-size: 19rpx;
+  color: #39E7FF;
+  background: rgba(57, 231, 255, 0.1);
+  border: 1rpx solid rgba(57, 231, 255, 0.22);
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+/* ---------- 统计 ---------- */
+.stats {
+  display: flex;
+  background: rgba(18, 26, 48, 0.72);
+  border: 1rpx solid rgba(57, 231, 255, 0.14);
+  border-radius: 20rpx;
+  padding: 32rpx 0;
+  margin-bottom: 40rpx;
+}
+
+.stat { flex: 1; text-align: center; }
+
+.stat-num {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #E8EEF8;
+}
+
+.stat-key {
+  font-size: 21rpx;
+  color: #5A6480;
+  margin-top: 8rpx;
+}
+
+/* ---------- 采集维度 ---------- */
+.channels { margin-bottom: 44rpx; }
+
+.ch-list { margin-top: 24rpx; }
+
+.ch {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.ch-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  margin-top: 14rpx;
+  margin-right: 22rpx;
+  flex-shrink: 0;
+}
+
+.ch-body { flex: 1; }
+
+.ch-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.ch-desc {
+  font-size: 22rpx;
+  color: #6E7893;
+  line-height: 1.6;
+}
+
+/* ---------- 控制 ---------- */
+.ctrl-row { display: flex; gap: 20rpx; }
+
+.ctrl-btn {
+  flex: 1;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background: linear-gradient(135deg, #39E7FF, #7B6BFF);
+  color: #04101F;
+  font-size: 28rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ctrl-btn.ghost {
+  background: transparent;
+  border: 1rpx solid rgba(57, 231, 255, 0.3);
+  color: #39E7FF;
+}

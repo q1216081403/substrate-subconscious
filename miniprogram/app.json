@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/capture/capture",
+    "pages/portrait/portrait",
+    "pages/world/world"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#060A18",
+    "navigationBarTitleText": "SUBSTRATE · 潜意识图谱",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#060A18",
+    "backgroundColorTop": "#060A18",
+    "backgroundColorBottom": "#060A18"
+  },
+  "tabBar": {
+    "color": "#5A6480",
+    "selectedColor": "#39E7FF",
+    "backgroundColor": "#0A1020",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "认知",
+        "iconPath": "assets/tab1_off.png",
+        "selectedIconPath": "assets/tab1_on.png"
+      },
+      {
+        "pagePath": "pages/capture/capture",
+        "text": "采集",
+        "iconPath": "assets/tab2_off.png",
+        "selectedIconPath": "assets/tab2_on.png"
+      },
+      {
+        "pagePath": "pages/portrait/portrait",
+        "text": "画像",
+        "iconPath": "assets/tab3_off.png",
+        "selectedIconPath": "assets/tab3_on.png"
+      },
+      {
+        "pagePath": "pages/world/world",
+        "text": "具象化",
+        "iconPath": "assets/tab4_off.png",
+        "selectedIconPath": "assets/tab4_on.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于生成场景化的潜意识世界"
+    }
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
