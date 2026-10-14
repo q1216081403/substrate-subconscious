@@ -4,7 +4,7 @@
 
 **用摄像头和麦克风记录你三周，让 AI 把那些你自己都没意识到的判断，画给你看。**
 
-[![在线体验](https://img.shields.io/badge/在线体验-substrate--subconscious.app.workbuddy.host-39E7FF?style=for-the-badge)](https://substrate-subconscious.app.workbuddy.host/)
+[![在线体验](https://img.shields.io/badge/在线体验-q1216081403.github.io-39E7FF?style=for-the-badge)](https://q1216081403.github.io/substrate-subconscious/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4?style=for-the-badge)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-39E7FF?style=for-the-badge)](LICENSE)
 
@@ -46,7 +46,7 @@ Demo 内置了一份被观测 21 天的模拟画像。它最有意思的地方�
 
 ## 在线体验
 
-**https://substrate-subconscious.app.workbuddy.host/**
+**https://q1216081403.github.io/substrate-subconscious/**
 
 任何人点开即可运行，无需下载安装。手机上会请求摄像头权限（拒绝也能看完全部内容）。
 
@@ -100,6 +100,26 @@ python -m http.server 8080
 摄像头功能需要 HTTPS 或 localhost。
 
 **小程序版**：微信开发者工具 → 导入项目 → 选择 `miniprogram` 目录 → AppID 选"测试号"。
+
+## 部署
+
+线上版部署在 **GitHub Pages**，来源分支 `gh-pages`：
+
+| 分支 | 内容 | 用途 |
+|---|---|---|
+| `master` | 完整源码（含小程序工程、文档） | 开发、参考 |
+| `gh-pages` | 仅 H5 部署产物 | 线上访问 |
+
+修改内容后重新部署：
+
+```bash
+# 从 web/ 同步到 gh-pages
+cp -r web/* ../_pages_build/ && cd ../_pages_build
+git add -A && git commit -m "update" && git push origin gh-pages
+# GitHub 自动重建，约 1 分钟生效
+```
+
+Pages 设置入口：仓库 → Settings → Pages → Source 选择 `gh-pages` 分支。
 
 ## 修改内容
 
