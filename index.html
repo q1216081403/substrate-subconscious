@@ -3,510 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SUBSTRATE · 潜意识图谱 · 概念 Demo</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  background:#04070F;
-  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
-  color:#E8EEF8;
-  padding:60px 24px 100px;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{max-width:1080px;margin:0 auto}
-
-/* ---- 页头 ---- */
-.hd{text-align:center;margin-bottom:20px}
-.hd .tag{
-  display:inline-block;font-size:11px;letter-spacing:4px;color:#39E7FF;
-  border:1px solid rgba(57,231,255,.3);padding:7px 18px;border-radius:20px;
-  background:rgba(57,231,255,.06);margin-bottom:26px;
-}
-.hd h1{font-size:52px;font-weight:800;letter-spacing:1px;line-height:1.2}
-.hd h1 em{font-style:normal;color:#39E7FF}
-.hd p{
-  color:#8A94AC;font-size:16px;line-height:1.8;margin:22px auto 0;
-  max-width:640px;
-}
-.hd .divider{
-  width:52px;height:2px;margin:30px auto 0;
-  background:linear-gradient(90deg,#39E7FF,#7B6BFF);
-}
-
-/* ---- 流程条 ---- */
-.flow{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
-  margin:64px 0 72px;
-}
-.flow-step{
-  background:rgba(18,26,48,.6);border:1px solid rgba(57,231,255,.14);
-  border-radius:16px;padding:28px 24px;position:relative;
-}
-.flow-idx{
-  font-family:"SF Mono",Consolas,monospace;font-size:13px;
-  color:#39E7FF;margin-bottom:14px;letter-spacing:2px;
-}
-.flow-t{font-size:19px;font-weight:700;margin-bottom:10px}
-.flow-d{font-size:13.5px;color:#7A85A0;line-height:1.75}
-
-/* ---- 手机 mock ---- */
-.phones{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
-  margin-bottom:72px;
-}
-.phone{
-  background:#060A18;border:1px solid rgba(57,231,255,.16);
-  border-radius:26px;overflow:hidden;
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:flex;flex-direction:column;
-}
-.nav{
-  padding:13px 16px;font-size:11px;color:#39E7FF;
-  letter-spacing:2px;border-bottom:1px solid rgba(57,231,255,.1);
-  display:flex;justify-content:space-between;align-items:center;
-  background:#080E1E;
-}
-.nav .dots{letter-spacing:2px;color:#5A6480}
-.screen{
-  padding:20px 16px 18px;flex:1;
-  background-image:
-    linear-gradient(rgba(57,231,255,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(57,231,255,.035) 1px,transparent 1px);
-  background-size:26px 26px;
-  min-height:430px;
-}
-.tabs{
-  display:flex;border-top:1px solid rgba(57,231,255,.1);background:#0A1020;
-}
-.tab{
-  flex:1;text-align:center;padding:11px 0;font-size:11px;color:#5A6480;
-  letter-spacing:1px;
-}
-.tab.on{color:#39E7FF}
-
-/* 通用手机内元素 */
-.p-tag{font-size:9.5px;color:#39E7FF;letter-spacing:2.4px;opacity:.75;margin-bottom:9px}
-.p-t{font-size:20px;font-weight:800;line-height:1.3;margin-bottom:7px}
-.p-d{font-size:11.5px;color:#8A94AC;line-height:1.75}
-
-/* 屏1 */
-.s1-img{
-  width:100%;height:210px;object-fit:cover;border-radius:12px;
-  margin:16px 0 18px;border:1px solid rgba(57,231,255,.15);
-  filter:brightness(.92);
-}
-.p-step{margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.05)}
-.p-step:last-child{border:0}
-.p-step-i{
-  font-family:"SF Mono",monospace;font-size:10px;color:#39E7FF;
-  background:rgba(57,231,255,.1);border:1px solid rgba(57,231,255,.3);
-  border-radius:6px;padding:4px 8px;display:inline-block;margin-bottom:8px;
-}
-.p-step-t{font-size:14px;font-weight:700;margin-bottom:5px}
-.p-step-d{font-size:11px;color:#7A85A0;line-height:1.65}
-.p-cta{
-  margin-top:16px;height:42px;border-radius:21px;
-  background:linear-gradient(135deg,#39E7FF,#7B6BFF);
-  color:#04101F;font-size:13px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* 屏2 */
-.p-cam{
-  width:100%;height:240px;border-radius:12px;overflow:hidden;
-  border:1px solid rgba(57,231,255,.16);position:relative;
-  background:#080E1E;margin-bottom:14px;
-}
-.p-cam img{width:100%;height:100%;object-fit:cover;opacity:.42}
-.p-hud{
-  position:absolute;left:0;right:0;bottom:0;padding:11px 13px;
-  background:linear-gradient(180deg,transparent,rgba(6,10,24,.94) 38%);
-}
-.p-hud-row{display:flex;gap:16px;margin-bottom:8px}
-.p-hud-v{font-family:"SF Mono",monospace;font-size:14px;color:#39E7FF;font-weight:700}
-.p-hud-k{font-size:8.5px;color:#5A6480;margin-top:1px}
-.p-wave{display:flex;align-items:flex-end;gap:2.5px;height:26px;margin-bottom:8px}
-.p-wave i{flex:1;background:linear-gradient(180deg,#39E7FF,rgba(123,107,255,.3));border-radius:1px;display:block}
-.p-hud-tag{
-  display:inline-block;font-size:8.5px;color:#39E7FF;
-  background:rgba(57,231,255,.1);border:1px solid rgba(57,231,255,.22);
-  padding:3px 7px;border-radius:4px;margin:0 4px 4px 0;
-}
-.p-stats{
-  display:flex;background:rgba(18,26,48,.75);
-  border:1px solid rgba(57,231,255,.14);border-radius:10px;
-  padding:14px 0;margin-bottom:16px;
-}
-.p-stat{flex:1;text-align:center}
-.p-stat-n{font-family:"SF Mono",monospace;font-size:17px;font-weight:700}
-.p-stat-k{font-size:9px;color:#5A6480;margin-top:3px}
-
-/* 屏3 */
-.p-dim{margin-bottom:11px}
-.p-dim-r{display:flex;align-items:center;gap:9px}
-.p-dim-n{font-size:11px;color:#A8B2C8;width:56px;flex-shrink:0}
-.p-bar{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
-.p-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#39E7FF,#7B6BFF)}
-.p-dim-v{font-family:"SF Mono",monospace;font-size:10.5px;color:#39E7FF;width:26px;text-align:right}
-.p-find{
-  background:rgba(18,26,48,.75);border:1px solid rgba(57,231,255,.14);
-  border-radius:12px;padding:14px;margin-bottom:11px;
-}
-.p-find-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
-.p-find-l{font-size:15px;font-weight:700}
-.p-find-s{font-family:"SF Mono",monospace;font-size:20px;font-weight:800}
-.p-meta{
-  background:linear-gradient(135deg,rgba(57,231,255,.08),rgba(123,107,255,.08));
-  border-left:2px solid #39E7FF;border-radius:6px;
-  padding:11px;margin:10px 0;
-}
-.p-meta-t{font-size:8.5px;color:#39E7FF;letter-spacing:2px;margin-bottom:6px}
-.p-meta-n{font-size:16px;font-weight:800;margin-bottom:5px}
-.p-meta-d{font-size:10px;color:#8A94AC;line-height:1.6}
-
-/* 屏4 */
-.p-sc{
-  background:rgba(18,26,48,.6);border:1px solid rgba(57,231,255,.28);
-  border-radius:12px;overflow:hidden;margin-bottom:12px;
-}
-.p-sc-img{position:relative;height:170px}
-.p-sc-img img{width:100%;height:100%;object-fit:cover;opacity:.82}
-.p-sc-b{padding:11px 13px 14px;margin-top:-34px;position:relative}
-.p-sc-sub{font-size:8.5px;letter-spacing:2.4px;color:#39E7FF;margin-bottom:6px}
-.p-sc-t{font-size:15px;font-weight:800;margin-bottom:5px}
-.p-sc-n{font-size:10.5px;color:#B0BACE;line-height:1.65}
-.p-shot{display:flex;margin-top:8px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07)}
-.p-shot-t{font-family:"SF Mono",monospace;font-size:9px;color:#39E7FF;width:40px;flex-shrink:0}
-.p-shot-c{font-size:9.5px;color:#8A94AC;line-height:1.55;flex:1}
-
-/* ---- 技术层 ---- */
-.tech{
-  background:rgba(18,26,48,.55);border:1px solid rgba(57,231,255,.14);
-  border-radius:18px;padding:34px;margin-bottom:28px;
-}
-.tech-h{
-  font-size:13px;letter-spacing:3px;color:#39E7FF;margin-bottom:26px;
-}
-.tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-.tech-i{
-  background:rgba(0,0,0,.22);border-radius:12px;padding:20px;
-  border-left:2px solid #39E7FF;
-}
-.tech-k{font-family:"SF Mono",monospace;font-size:11px;color:#39E7FF;letter-spacing:2px;margin-bottom:9px}
-.tech-t{font-size:15px;font-weight:700;margin-bottom:8px}
-.tech-d{font-size:12.5px;color:#8A94AC;line-height:1.75}
-.tech-v{
-  font-family:"SF Mono",monospace;font-size:11px;color:#7B6BFF;margin-top:9px;
-  background:rgba(0,0,0,.3);padding:7px 10px;border-radius:6px;line-height:1.5;
-}
-
-/* ---- 素材 ---- */
-.media-h{font-size:13px;letter-spacing:3px;color:#39E7FF;margin-bottom:24px;text-align:center}
-.media{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:34px;
-}
-.media-i{
-  background:rgba(18,26,48,.5);border:1px solid rgba(255,255,255,.07);
-  border-radius:12px;overflow:hidden;
-}
-.media-i img{width:100%;height:230px;object-fit:cover;display:block}
-.media-c{padding:11px 13px}
-.media-t{font-size:12.5px;font-weight:700;margin-bottom:4px}
-.media-s{font-size:10.5px;color:#7A85A0;line-height:1.6}
-.video-w{
-  background:rgba(18,26,48,.5);border:1px solid rgba(57,231,255,.18);
-  border-radius:14px;padding:20px;margin-bottom:60px;
-}
-video{width:100%;max-width:300px;border-radius:12px;display:block;margin:0 auto}
-
-/* ---- 页脚 ---- */
-.ft{
-  text-align:center;padding-top:44px;border-top:1px solid rgba(255,255,255,.07);
-}
-.ft p{font-size:13px;color:#5A6480;line-height:1.9}
-.ft code{
-  font-family:"SF Mono",monospace;color:#39E7FF;
-  background:rgba(57,231,255,.08);padding:2px 7px;border-radius:4px;
-}
-
-@media(max-width:900px){
-  .phones,.media{grid-template-columns:repeat(2,1fr)}
-  .flow,.tech-grid{grid-template-columns:1fr}
-  .hd h1{font-size:36px}
-}
-</style>
+<title>心象宫殿 · Palace of Mind — 认知扭曲可视化实验</title>
+<link rel="stylesheet" href="css/style.css">
+<script>
+/* three.js 解析：本地 vendor 优先；缺失时自动回退 CDN。
+   这样即使仓库不含 23MB 的本地依赖（例如只在网页上拖拽上传 js/css/index.html），
+   应用依然完整可用；本地运行时仍然走 vendor/ 离线文件。 */
+(function () {
+  var url = "./vendor/three.module.js", ok = false;
+  try {
+    var x = new XMLHttpRequest();
+    x.open("HEAD", url, false);
+    x.send();
+    ok = x.status >= 200 && x.status < 400;
+  } catch (e) { ok = false; }
+  if (!ok) url = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+  var s = document.createElement("script");
+  s.type = "importmap";
+  s.textContent = JSON.stringify({ imports: { three: url } });
+  document.head.appendChild(s);
+})();
+</script>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="hd">
-    <div class="tag">MULTIMODAL · CONCEPT DEMO</div>
-    <h1>你的潜意识<br><em>长什么样</em></h1>
-    <p>用摄像头和麦克风记录你三周，然后让 AI 把那些你自己都没意识到的判断，画给你看。</p>
-    <div class="divider"></div>
-  </div>
-
-  <div class="flow">
-    <div class="flow-step">
-      <div class="flow-idx">01</div>
-      <div class="flow-t">观察你</div>
-      <div class="flow-d">摄像头看视线与表情，麦克风听语气与停顿，全部在本机端处理。</div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-idx">02</div>
-      <div class="flow-t">读懂你</div>
-      <div class="flow-d">多模态模型从上万条数据里，找出你反复出现的判断模式。</div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-idx">03</div>
-      <div class="flow-t">生成你的世界</div>
-      <div class="flow-d">把结论变成一段视频：AI 按你的潜意识，渲染你的世界长什么样。</div>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◈</span>
+    <div>
+      <h1>心象宫殿 <span class="en">Palace of Mind</span></h1>
+      <p class="tagline">同一个现实，在不同的认知里，是不同的世界</p>
     </div>
   </div>
+  <div class="badge-row">
+    <span class="badge badge-local">🔒 全程本地处理 · 数据不出浏览器</span>
+    <span class="badge badge-eth">⚠️ 隐喻可视化 · 非心理诊断</span>
+  </div>
+</header>
 
-  <!-- 四个手机屏 -->
-  <div class="phones">
-
-    <!-- 屏1 认知 -->
-    <div class="phone">
-      <div class="nav"><span>SUBSTRATE</span><span class="dots">···</span></div>
-      <div class="screen">
-        <div class="p-tag">MULTIMODAL · CONCEPT DEMO</div>
-        <div class="p-t">你的潜意识<br><span style="color:#39E7FF">长什么样</span></div>
-        <div class="p-d">用摄像头和麦克风记录你三周，然后让 AI 把那些你自己都没意识到的判断，画给你看。</div>
-        <img class="s1-img" src="miniprogram/assets/avatar_wire.png" alt="潜意识线框">
-        <div class="p-step">
-          <div class="p-step-i">01</div>
-          <div class="p-step-t">观察你</div>
-          <div class="p-step-d">摄像头看视线与表情，麦克风听语气与停顿。</div>
-        </div>
-        <div class="p-step">
-          <div class="p-step-i">02</div>
-          <div class="p-step-t">读懂你</div>
-          <div class="p-step-d">多模态模型找出你反复出现的判断模式。</div>
-        </div>
-        <div class="p-step">
-          <div class="p-step-i">03</div>
-          <div class="p-step-t">生成你的世界</div>
-          <div class="p-step-d">AI 按你的潜意识渲染你的世界。</div>
-        </div>
-        <div class="p-cta">开始观测我</div>
-      </div>
-      <div class="tabs">
-        <div class="tab on">认知</div><div class="tab">采集</div><div class="tab">画像</div><div class="tab">具象化</div>
-      </div>
+<div class="layout">
+  <!-- ============ 左侧步骤 ============ -->
+  <aside class="steps">
+    <div class="step active" data-step="1"><span class="num">1</span><div><b>知情同意</b><i>伦理与隐私</i></div></div>
+    <div class="step" data-step="2"><span class="num">2</span><div><b>采集数据</b><i>摄像头 · 麦克风 · 语音</i></div></div>
+    <div class="step" data-step="3"><span class="num">3</span><div><b>信号分析</b><i>行为特征 → 认知维度</i></div></div>
+    <div class="step" data-step="4"><span class="num">4</span><div><b>心象生成</b><i>宫殿渲染 · 短片</i></div></div>
+    <div class="step" data-step="5"><span class="num">5</span><div><b>导出</b><i>视频 · 报告 · AI 提示词</i></div></div>
+    <div class="steps-foot">
+      <p>原型灵感：P5 认知宫殿</p>
+      <p>12 种心象世界设定</p>
     </div>
+  </aside>
 
-    <!-- 屏2 采集 -->
-    <div class="phone">
-      <div class="nav"><span>采集</span><span class="dots">● REC</span></div>
-      <div class="screen">
-        <div class="p-tag">STEP 01 · 采集</div>
-        <div class="p-t">正在观察你</div>
-        <div class="p-cam">
-          <img src="miniprogram/assets/data_flow.png" alt="采集画面">
-          <div class="p-hud">
-            <div class="p-hud-row">
-              <div><div class="p-hud-v">30</div><div class="p-hud-k">FPS</div></div>
-              <div><div class="p-hud-v">1</div><div class="p-hud-k">人脸</div></div>
-              <div><div class="p-hud-v">186</div><div class="p-hud-k">语气 Hz</div></div>
+  <main class="content">
+
+    <!-- ============ 1 知情同意 ============ -->
+    <section id="step-consent" class="panel">
+      <h2>开始之前，请阅读并确认</h2>
+      <div class="consent-box">
+        <p><b>这个应用做什么：</b>它通过摄像头和麦克风采集<b>行为信号</b>（面部微表情、视线方向、语音语调、用词习惯），推断出一组心理学维度，再把「某种价值观 / 欲望 / 认知偏差」渲染成一座象征性的 3D 宫殿短片。它的目标是<b>让人看见：当认知被某种倾向主导时，现实会扭曲成什么样子</b>。</p>
+        <p><b>它不做什么：</b>它<b>不能</b>读取思想，不能诊断心理疾病，不能凭画面判定一个人。所有宫殿画面都是<b>视觉隐喻</b>，是「一种可能的解读」，不是事实陈述。</p>
+        <ul>
+          <li>☑ 视频与音频<b>只在本机浏览器内处理</b>，不上传任何服务器，可断网运行。</li>
+          <li>☑ 采集对象仅限<b>本人</b>，或已向你充分知情同意的他人；请勿偷录偷拍。</li>
+          <li>☑ 我理解宫殿是对行为信号的<b>隐喻化再创作</b>，而非对内心的科学测绘。</li>
+          <li>☑ 生成内容仅用于自我觉察、创作与研究，不用于人事、司法、医疗等决策。</li>
+        </ul>
+        <label class="agree"><input type="checkbox" id="chk-consent"> 我已阅读并同意以上全部条款</label>
+        <button id="btn-consent-agree" class="btn primary" disabled>进入应用 →</button>
+      </div>
+    </section>
+
+    <!-- ============ 2 采集 ============ -->
+    <section id="step-capture" class="panel hidden">
+      <h2>采集行为信号</h2>
+      <p class="hint">建议让被观察者自然交谈 1–3 分钟（可以聊工作、聊身边的人）。没有摄像头也可以进入「演示模式」手动调节参数。</p>
+      <div class="cap-grid">
+        <div class="cap-video-wrap">
+          <video id="cam-video" playsinline muted></video>
+          <canvas id="cam-overlay" width="480" height="360"></canvas>
+          <div id="cap-status" class="cap-status">摄像头未开启</div>
+        </div>
+        <div class="cap-side">
+          <div class="card">
+            <h3>设备状态</h3>
+            <div class="row"><span>摄像头</span><b id="st-cam">—</b></div>
+            <div class="row"><span>人脸模型</span><b id="st-face">—</b></div>
+            <div class="row"><span>麦克风</span><b id="st-mic">—</b></div>
+            <div class="row"><span>语音识别</span><b id="st-asr">—</b></div>
+            <div class="row"><span>采集时长</span><b id="cap-timer">00:00</b></div>
+            <div class="meter-wrap"><span>音量</span><div class="meter"><div id="mic-meter" class="meter-fill"></div></div></div>
+          </div>
+          <div class="card">
+            <h3>实时信号</h3>
+            <div id="live-metrics" class="live-metrics"></div>
+          </div>
+          <div class="btn-col">
+            <button id="btn-start-capture" class="btn primary">● 开始采集</button>
+            <button id="btn-stop-capture" class="btn danger" disabled>■ 停止并分析</button>
+            <button id="btn-demo-mode" class="btn ghost">跳过采集 · 演示模式</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>语音转写（本地浏览器识别）<span class="hint-inline">用于价值观关键词分析</span></h3>
+        <div id="transcript" class="transcript">（尚未开始）</div>
+      </div>
+    </section>
+
+    <!-- ============ 3 信号分析 ============ -->
+    <section id="step-signals" class="panel hidden">
+      <h2>信号分析结果</h2>
+      <p class="hint">以下维度由行为信号估算（0–100）。它们驱动宫殿的参数，也是原型匹配的依据。</p>
+      <div class="sig-grid">
+        <div class="card"><h3>认知维度</h3><div id="dim-bars" class="dim-bars"></div></div>
+        <div class="card"><h3>注意力分布</h3><div id="attention-grid" class="att-grid"></div><p class="hint-inline">视线停留最久的区域，在宫殿中会被照亮</p></div>
+      </div>
+      <div class="card">
+        <h3>价值关键词</h3>
+        <div id="kw-list" class="kw-list">（无）</div>
+      </div>
+      <div class="card">
+        <h3>心象世界匹配</h3>
+        <div id="arch-rank" class="arch-rank"></div>
+        <p id="arch-note" class="arch-note"></p>
+      </div>
+      <div class="btn-col row-end">
+        <button id="btn-back-capture" class="btn ghost">← 重新采集</button>
+        <button id="btn-to-palace" class="btn primary">生成宫殿 →</button>
+      </div>
+    </section>
+
+    <!-- ============ 4 宫殿 ============ -->
+    <section id="step-palace" class="panel hidden">
+      <h2>心象宫殿</h2>
+      <div class="palace-grid">
+        <div class="palace-stage">
+          <canvas id="palace-canvas" width="1280" height="720"></canvas>
+          <div id="palace-overlay" class="palace-overlay"></div>
+          <div id="palace-title" class="palace-title"></div>
+        </div>
+        <div class="palace-side">
+          <div class="card">
+            <h3>场景选择</h3>
+            <select id="arch-select" class="select"></select>
+            <p id="arch-desc" class="arch-desc"></p>
+          </div>
+          <div class="card">
+            <h3>参数</h3>
+            <label class="fld">短片时长
+              <select id="duration-select" class="select">
+                <option value="15">15 秒</option>
+                <option value="30" selected>30 秒</option>
+                <option value="45">45 秒</option>
+                <option value="60">60 秒</option>
+              </select>
+            </label>
+            <label class="fld">扭曲强度 <b id="distortion-val">100%</b>
+              <input type="range" id="distortion-slider" min="20" max="100" value="100">
+            </label>
+            <div class="btn-col">
+              <button id="btn-play" class="btn primary">▶ 播放</button>
+              <button id="btn-record" class="btn danger">● 录制短片</button>
+              <label class="chk"><input type="checkbox" id="chk-music" checked> 合成配乐</label>
+              <label class="chk"><input type="checkbox" id="chk-mic-audio"> 混入原声</label>
             </div>
-            <div class="p-wave" id="wave"></div>
-            <div>
-              <span class="p-hud-tag">视线停留 · 3.2s</span>
-              <span class="p-hud-tag">语气上升</span>
-              <span class="p-hud-tag">微表情 · 抑制</span>
-            </div>
+            <div id="rec-status" class="rec-status"></div>
           </div>
-        </div>
-        <div class="p-stats">
-          <div class="p-stat"><div class="p-stat-n">21</div><div class="p-stat-k">观测天数</div></div>
-          <div class="p-stat"><div class="p-stat-n">186</div><div class="p-stat-k">累计小时</div></div>
-          <div class="p-stat"><div class="p-stat-n">4820</div><div class="p-stat-k">有效样本</div></div>
-        </div>
-        <div class="p-step">
-          <div class="p-step-t">采集维度</div>
-          <div class="p-step-d">视线轨迹 · 面部微表情 · 语气与停顿 · 交互节奏</div>
-        </div>
-      </div>
-      <div class="tabs">
-        <div class="tab">认知</div><div class="tab on">采集</div><div class="tab">画像</div><div class="tab">具象化</div>
-      </div>
-    </div>
-
-    <!-- 屏3 画像 -->
-    <div class="phone">
-      <div class="nav"><span>画像</span><span class="dots">···</span></div>
-      <div class="screen">
-        <div class="p-tag">STEP 02 · 画像</div>
-        <div class="p-t">AI 看到了什么</div>
-        <div class="p-d" style="margin-bottom:14px">基于 21 天 / 186 小时数据 · 置信度 0.87</div>
-        <div class="p-stats" style="background:transparent;border:0;padding:0;margin-bottom:16px">
-          <div style="width:100%">
-            <div class="p-dim"><div class="p-dim-r"><span class="p-dim-n">功利性</span><span class="p-bar"><i style="width:82%"></i></span><span class="p-dim-v">82</span></div></div>
-            <div class="p-dim"><div class="p-dim-r"><span class="p-dim-n">共情度</span><span class="p-bar"><i style="width:41%"></i></span><span class="p-dim-v">41</span></div></div>
-            <div class="p-dim"><div class="p-dim-r"><span class="p-dim-n">控制感</span><span class="p-bar"><i style="width:76%"></i></span><span class="p-dim-v">76</span></div></div>
-            <div class="p-dim"><div class="p-dim-r"><span class="p-dim-n">好奇心</span><span class="p-bar"><i style="width:33%"></i></span><span class="p-dim-v">33</span></div></div>
-          </div>
-        </div>
-        <div class="p-find">
-          <div class="p-find-h">
-            <div class="p-find-l">功利性视角</div>
-            <div class="p-find-s" style="color:#FF7B6B">82</div>
-          </div>
-          <div class="p-meta">
-            <div class="p-meta-t">潜意识隐喻</div>
-            <div class="p-meta-n">「印钞机」</div>
-            <div class="p-meta-d">社交场合中，人被无意识抽象为「功能接口」。</div>
-          </div>
-          <div class="p-step-d">视线停留与对话起点的触发条件高度集中于「对方能提供什么」。</div>
-        </div>
-        <div class="p-find" style="border-color:rgba(255,255,255,.06)">
-          <div class="p-find-h">
-            <div class="p-find-l">尺度错位</div>
-            <div class="p-find-s" style="color:#FFC14D">68</div>
-          </div>
-          <div class="p-meta">
-            <div class="p-meta-t">潜意识隐喻</div>
-            <div class="p-meta-n">「蝼蚁」</div>
-            <div class="p-meta-d">世界被感知为一张巨大的电路板。</div>
+          <div class="card" id="demo-sliders">
+            <h3>演示模式 · 手动参数</h3>
+            <p class="hint-inline">拖动滑块实时改造宫殿；用于概念演示与分镜设计。</p>
           </div>
         </div>
       </div>
-      <div class="tabs">
-        <div class="tab">认知</div><div class="tab">采集</div><div class="tab on">画像</div><div class="tab">具象化</div>
-      </div>
-    </div>
+    </section>
 
-    <!-- 屏4 具象化 -->
-    <div class="phone">
-      <div class="nav"><span>具象化</span><span class="dots">···</span></div>
-      <div class="screen">
-        <div class="p-tag">STEP 03 · 具象化</div>
-        <div class="p-t">你的潜意识世界</div>
-        <div class="p-d" style="margin-bottom:14px">AI 依据你的画像生成的影像</div>
-        <div class="p-sc">
-          <div class="p-sc-img"><img src="miniprogram/assets/world_atm.png" alt="印钞机"></div>
-          <div class="p-sc-b">
-            <div class="p-sc-sub">SCENE 01 · 功能性社交</div>
-            <div class="p-sc-t">把他看成印钞机</div>
-            <div class="p-sc-n">在这个场景里，其他人不是人，是接口。他们身上唯一被读取的部分，是「能给出什么」。</div>
-            <div class="p-shot"><span class="p-shot-t">0.0s</span><span class="p-shot-c">固定广角：主体坐在中央，四周围绕着线框人形。</span></div>
-            <div class="p-shot"><span class="p-shot-t">2.1s</span><span class="p-shot-c">推近：人形开始齿轮化，硬币状光点汇入。</span></div>
-            <div class="p-shot"><span class="p-shot-t">4.3s</span><span class="p-shot-c">环绕：所有人形同步机械化，唯主体保持人形。</span></div>
-          </div>
-        </div>
-        <div class="p-sc" style="border-color:rgba(255,255,255,.06)">
-          <div class="p-sc-img"><img src="miniprogram/assets/world_ant.png" alt="电路板"></div>
-          <div class="p-sc-b">
-            <div class="p-sc-sub" style="color:#7B6BFF">SCENE 02 · 尺度错位</div>
-            <div class="p-sc-t">把世界看成电路板</div>
-            <div class="p-sc-n">视点被拉到极高处。所有人都变成板上的微小节点，包括自己。</div>
-          </div>
-        </div>
+    <!-- ============ 5 导出 ============ -->
+    <section id="step-export" class="panel hidden">
+      <h2>导出与再创作</h2>
+      <div class="exp-grid">
+        <div class="card"><h3>短片</h3><p class="hint-inline">WebM 视频，含字幕与配乐，可直接播放</p><button id="btn-dl-video" class="btn primary" disabled>下载视频</button></div>
+        <div class="card"><h3>数据报告</h3><p class="hint-inline">JSON + HTML：维度、关键词、匹配依据</p>
+          <button id="btn-dl-json" class="btn">下载 JSON</button>
+          <button id="btn-dl-report" class="btn">下载 HTML 报告</button></div>
+        <div class="card"><h3>AI 视频生成</h3><p class="hint-inline">把宫殿译文成可灵 / 即梦 / Runway 等模型的提示词与分镜</p>
+          <button id="btn-copy-prompt" class="btn">复制视频提示词</button>
+          <button id="btn-copy-shots" class="btn">复制分镜脚本</button></div>
       </div>
-      <div class="tabs">
-        <div class="tab">认知</div><div class="tab">采集</div><div class="tab">画像</div><div class="tab on">具象化</div>
-      </div>
-    </div>
+      <div class="card"><h3>报告预览</h3><iframe id="report-preview"></iframe></div>
+    </section>
 
-  </div>
-
-  <!-- 技术实现 -->
-  <div class="tech">
-    <div class="tech-h">技术实现 · 全链路均为当前已成熟技术</div>
-    <div class="tech-grid">
-      <div class="tech-i">
-        <div class="tech-k">LAYER 01</div>
-        <div class="tech-t">采集层</div>
-        <div class="tech-d">端侧视觉模型（人脸框、微表情）与声学模型（语速、音高、停顿）在本机运行，原始画面与声音不出设备。</div>
-        <div class="tech-v">现成：MediaPipe / Whisper / 端侧 SDK</div>
-      </div>
-      <div class="tech-i">
-        <div class="tech-k">LAYER 02</div>
-        <div class="tech-t">推理层</div>
-        <div class="tech-d">多模态大模型对齐 21 天的行为序列，从「谁被注视多久」这类原始信号，推导到「功利性视角 82」这类人格结论。</div>
-        <div class="tech-v">现成：多模态 LLM 长序列推理</div>
-      </div>
-      <div class="tech-i">
-        <div class="tech-k">LAYER 03</div>
-        <div class="tech-t">生成层</div>
-        <div class="tech-d">文生视频模型按分镜脚本渲染。下图所有画面均由 AI 生成，无实拍、无素材库。</div>
-        <div class="tech-v">现成：文生视频模型（本 demo 素材即由其产出）</div>
-      </div>
-      <div class="tech-i">
-        <div class="tech-k">MOAT</div>
-        <div class="tech-t">真正的门槛在哪</div>
-        <div class="tech-d">技术不是门槛——采集、推理、生成三环都已成熟。门槛是<b>心理学判读框架</b>：如何把行为序列翻译成人格，且说出来让人信。</div>
-        <div class="tech-v">这是需要长期积累的部分</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AI 素材 -->
-  <div class="media-h">AI 生成素材 · 本 demo 的「潜意识世界」实拍</div>
-  <div class="media">
-    <div class="media-i">
-      <img src="miniprogram/assets/world_atm.png" alt="印钞机">
-      <div class="media-c">
-        <div class="media-t">把他看成印钞机</div>
-        <div class="media-s">他人被齿轮化，硬币汇入——功利性视角的视觉翻译</div>
-      </div>
-    </div>
-    <div class="media-i">
-      <img src="miniprogram/assets/world_ant.png" alt="蝼蚁">
-      <div class="media-c">
-        <div class="media-t">把人当蝼蚁</div>
-        <div class="media-s">极小人形伫立于巨大电路板——尺度错位的视觉翻译</div>
-      </div>
-    </div>
-    <div class="media-i">
-      <img src="miniprogram/assets/world_particle.png" alt="消耗单元">
-      <div class="media-c">
-        <div class="media-t">把自己当消耗单元</div>
-        <div class="media-s">粒子从身体剥离上升汇入方体——消耗式节奏的视觉翻译</div>
-      </div>
-    </div>
-    <div class="media-i">
-      <img src="assets/Concept_art__dark_tech_aesthet_2026-10-14T13-37-06.png" alt="潜意识剖面">
-      <div class="media-c">
-        <div class="media-t">潜意识剖面</div>
-        <div class="media-s">脑内不是大脑，是一座数据城市</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="video-w">
-    <div class="media-h">文生视频 · SCENE 01 动态版</div>
-    <video src="assets/Cinematic_dark_tech_visual__A__2026-10-14T13-42-22.mp4" autoplay loop muted playsinline controls></video>
-  </div>
-
-  <div class="ft">
-    <p>
-      SUBSTRATE · 潜意识图谱　|　概念 Demo v1.0<br>
-      小程序工程位于 <code>miniprogram/</code>，导入微信开发者工具即可运行<br>
-      本页面所有画面与视频均由 AI 生成，人物数据为模拟样本
-    </p>
-  </div>
-
+  </main>
 </div>
 
-<script>
-  // 波形动画
-  (function(){
-    const w = document.getElementById('wave');
-    if(!w) return;
-    for(let i=0;i<26;i++){
-      const b = document.createElement('i');
-      b.style.height = (15+Math.random()*85)+'%';
-      w.appendChild(b);
-    }
-    setInterval(function(){
-      w.querySelectorAll('i').forEach(function(el){
-        el.style.height = (15+Math.random()*85)+'%';
-      });
-    }, 200);
-  })();
-</script>
+<footer class="foot">心象宫殿 · 本地原型 — 画面是隐喻，不是诊断；看到扭曲，也为了理解扭曲。</footer>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
