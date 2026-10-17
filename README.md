@@ -1,7 +1,5 @@
 # 心象宫殿 · Palace of Mind
 
-🌐 **在线版（GitHub Pages）**：https://q1216081403.github.io/substrate-subconscious/
-📦 **仓库**：https://github.com/q1216081403/substrate-subconscious
 
 > 同一个现实世界，在不同人的扭曲认知里，会变成完全不同的世界。
 > 本工具把「行为信号 → 认知维度 → 心象世界」渲染成一段人人看得懂的 3D 隐喻短片。
